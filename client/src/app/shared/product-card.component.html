@@ -1,0 +1,19 @@
+<article class="product-card">
+  <a class="product-media" [routerLink]="['/product', product().slug]">
+    @if (product().badge) {
+      <span class="badge">{{ product().badge }}</span>
+    }
+    <img [src]="product().image" [alt]="product().name" />
+  </a>
+  <div class="product-body">
+    <p class="product-origin">{{ product().origin }}</p>
+    <h3><a [routerLink]="['/product', product().slug]">{{ product().name }}</a></h3>
+    <p class="product-desc">{{ product().description }}</p>
+    <div class="product-row">
+      <p class="price">{{ money(product().price) }} <span>/ {{ product().unit }}</span></p>
+      <button type="button" class="add-btn" (click)="add()" [disabled]="product().stock < 1">
+        {{ product().stock < 1 ? 'Sold out' : 'Add' }}
+      </button>
+    </div>
+  </div>
+</article>

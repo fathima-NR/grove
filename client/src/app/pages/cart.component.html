@@ -1,0 +1,53 @@
+<section class="page">
+  <div class="container">
+    <p class="eyebrow">Basket</p>
+    <h1>Your market basket.</h1>
+
+    @if (cart.items().length === 0) {
+      <div class="empty">
+        <h2>Nothing in here yet.</h2>
+        <p>The citrus and the press are both open.</p>
+        <a class="btn btn-dark" routerLink="/shop">Shop the market</a>
+      </div>
+    } @else {
+      <div class="split">
+        <div class="lines">
+          @for (item of cart.items(); track item.productId) {
+            <article class="line">
+              <a [routerLink]="['/product', item.slug]">
+                <img [src]="item.image" [alt]="item.name" />
+              </a>
+              <div>
+                <h2><a [routerLink]="['/product', item.slug]">{{ item.name }}</a></h2>
+                <p class="muted">{{ money(item.price) }} / {{ item.unit }}</p>
+                <button type="button" class="text-btn" (click)="cart.remove(item.productId)">Remove</button>
+              </div>
+              <div class="stepper">
+                <button type="button" (click)="cart.setQuantity(item.productId, item.quantity - 1)" aria-label="Decrease">−</button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" (click)="cart.setQuantity(item.productId, item.quantity + 1)" aria-label="Increase">+</button>
+              </div>
+              <strong>{{ money(item.price * item.quantity) }}</strong>
+            </article>
+          }
+        </div>
+
+        <aside class="summary">
+          <h2>Summary</h2>
+          <p><span>Subtotal</span><span>{{ money(cart.subtotal()) }}</span></p>
+          <p>
+            <span>Delivery</span>
+            <span>{{ cart.shipping() === 0 ? 'Free' : money(cart.shipping()) }}</span>
+          </p>
+          @if (remaining() > 0) {
+            <p class="hint">Add {{ money(remaining()) }} for free delivery.</p>
+          } @else {
+            <p class="hint">Delivery is on the grove today.</p>
+          }
+          <p class="total"><span>Total</span><span>{{ money(cart.total()) }}</span></p>
+          <a class="btn btn-dark btn-block" routerLink="/checkout">Checkout</a>
+        </aside>
+      </div>
+    }
+  </div>
+</section>

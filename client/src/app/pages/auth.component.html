@@ -1,0 +1,26 @@
+<section class="page">
+  <div class="container auth-layout">
+    <div class="auth-aside">
+      <p class="eyebrow">Account</p>
+      <h1>Come back for the weekly crate.</h1>
+      <p>Orders, delivery notes, and the same basket next time you are hungry for citrus.</p>
+    </div>
+    <form class="panel" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="mode-switch">
+        <button type="button" [class.on]="mode() === 'login'" (click)="setMode('login')">Sign in</button>
+        <button type="button" [class.on]="mode() === 'register'" (click)="setMode('register')">Create account</button>
+      </div>
+      @if (error()) {
+        <p class="banner">{{ error() }}</p>
+      }
+      @if (mode() === 'register') {
+        <label>Name<input formControlName="name" autocomplete="name" /></label>
+      }
+      <label>Email<input formControlName="email" type="email" autocomplete="email" /></label>
+      <label>Password<input formControlName="password" type="password" autocomplete="current-password" /></label>
+      <button class="btn btn-dark" type="submit" [disabled]="saving()">
+        {{ saving() ? 'One moment…' : (mode() === 'login' ? 'Sign in' : 'Create account') }}
+      </button>
+    </form>
+  </div>
+</section>

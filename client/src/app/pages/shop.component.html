@@ -1,0 +1,55 @@
+<section class="page">
+  <div class="container">
+    <div class="page-intro">
+      <p class="eyebrow">Shop</p>
+      <h1>{{ title() }}</h1>
+      @if (!loading()) {
+        <p class="lede">{{ products().length }} {{ products().length === 1 ? 'item' : 'items' }} in the crates today.</p>
+      }
+    </div>
+
+    <div class="shop-layout">
+      <aside class="filters">
+        <p class="filter-label">Department</p>
+        <button type="button" class="chip" [class.on]="!category()" (click)="chooseCategory('')">All</button>
+        @for (item of categories(); track item.id) {
+          <button type="button" class="chip" [class.on]="category() === item.slug" (click)="chooseCategory(item.slug)">
+            {{ item.name }}
+          </button>
+        }
+      </aside>
+
+      <div>
+        <div class="shop-toolbar">
+          <label>
+            Sort
+            <select [value]="sort()" (change)="changeSort($any($event.target).value)">
+              <option value="featured">Grove favorites</option>
+              <option value="price-asc">Price, low to high</option>
+              <option value="price-desc">Price, high to low</option>
+              <option value="rating">Top rated</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+        </div>
+
+        @if (error()) {
+          <p class="banner">{{ error() }}</p>
+        } @else if (loading()) {
+          <p class="muted">Bringing in the harvest…</p>
+        } @else if (products().length === 0) {
+          <div class="empty">
+            <h2>Nothing in this crate.</h2>
+            <p>Try another department, or search for oranges, almonds, or juice.</p>
+          </div>
+        } @else {
+          <div class="product-grid">
+            @for (product of products(); track product.id) {
+              <app-product-card [product]="product" />
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

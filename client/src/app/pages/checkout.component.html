@@ -1,0 +1,41 @@
+<section class="page">
+  <div class="container">
+    <p class="eyebrow">Checkout</p>
+    <h1>Where should we deliver?</h1>
+
+    @if (cart.items().length === 0) {
+      <div class="empty">
+        <h2>Your basket is empty.</h2>
+        <a class="btn btn-dark" routerLink="/shop">Shop the market</a>
+      </div>
+    } @else {
+      <div class="split">
+        <form class="panel" [formGroup]="form" (ngSubmit)="place()">
+          @if (error()) {
+            <p class="banner">{{ error() }}</p>
+          }
+          <label>Full name<input formControlName="fullName" autocomplete="name" /></label>
+          <label>Address<input formControlName="line1" autocomplete="address-line1" placeholder="Street, building, apartment" /></label>
+          <div class="field-row">
+            <label>City<input formControlName="city" autocomplete="address-level2" /></label>
+            <label>Postal code<input formControlName="postalCode" autocomplete="postal-code" /></label>
+          </div>
+          <label>Country<input formControlName="country" autocomplete="country-name" /></label>
+          <label>Note for the packer<textarea formControlName="notes" rows="3" placeholder="Gate code, leave with the doorman…"></textarea></label>
+          <button class="btn btn-dark" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Placing order…' : 'Place order' }}
+          </button>
+        </form>
+
+        <aside class="summary">
+          <h2>Basket</h2>
+          @for (item of cart.items(); track item.productId) {
+            <p><span>{{ item.quantity }} × {{ item.name }}</span><span>{{ money(item.price * item.quantity) }}</span></p>
+          }
+          <p><span>Delivery</span><span>{{ cart.shipping() === 0 ? 'Free' : money(cart.shipping()) }}</span></p>
+          <p class="total"><span>Total</span><span>{{ money(cart.total()) }}</span></p>
+        </aside>
+      </div>
+    }
+  </div>
+</section>

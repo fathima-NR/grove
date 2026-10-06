@@ -1,0 +1,29 @@
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="logo footer-logo">Grove</p>
+      <p class="muted">An organic market for fruit, nuts, and juice pressed the morning it leaves the grove.</p>
+    </div>
+    <div>
+      <p class="footer-title">Market</p>
+      <a routerLink="/shop">All produce</a>
+      <a routerLink="/shop" [queryParams]="{ category: 'citrus' }">Citrus</a>
+      <a routerLink="/shop" [queryParams]="{ category: 'berries' }">Berries</a>
+      <a routerLink="/shop" [queryParams]="{ category: 'pressed' }">Cold-pressed</a>
+    </div>
+    <div>
+      <p class="footer-title">Visit</p>
+      <a routerLink="/about">Our grove</a>
+      <a routerLink="/orders">Your orders</a>
+      <a routerLink="/login">Account</a>
+    </div>
+    <div>
+      <p class="footer-title">Delivery</p>
+      <p class="muted">Free over $40. Packed in paper and glass, chilled for the ride.</p>
+    </div>
+  </div>
+  <div class="container footer-base">
+    <span>Grove Market</span>
+    <span>Fruit, nuts, and juice. Packed this morning.</span>
+  </div>
+</footer>

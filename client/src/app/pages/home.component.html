@@ -1,0 +1,119 @@
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Organic market · Packed this morning</p>
+      <h1>Fresh from the <em>grove.</em></h1>
+      <p class="lede">
+        Citrus, berries, nuts, and cold-pressed juice. Picked ripe, packed in paper and glass, and sent while the color is still loud.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-dark" routerLink="/shop">Shop the market</a>
+        <a class="btn btn-line" routerLink="/shop" [queryParams]="{ seasonal: 'true' }">This week's harvest</a>
+      </div>
+      <ul class="trust">
+        <li>Farm direct</li>
+        <li>Plastic-light packing</li>
+        <li>Free delivery over $40</li>
+      </ul>
+    </div>
+    <div class="hero-visual">
+      <img
+        src="https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=1400&q=80"
+        alt="A bowl of mixed berries, citrus, and stone fruit"
+      />
+      <div class="float-card">
+        <strong>4.9</strong>
+        <span>Grove favorites, weighed this morning</span>
+      </div>
+      <div class="float-pill">Nature's finest</div>
+    </div>
+  </div>
+</section>
+
+@if (error()) {
+  <div class="container">
+    <p class="banner">{{ error() }}</p>
+  </div>
+}
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Departments</p>
+        <h2>Shop by what you came for.</h2>
+      </div>
+      <a class="text-link" routerLink="/shop">View the full market</a>
+    </div>
+    <div class="category-grid">
+      @for (category of categories(); track category.id) {
+        <a class="category-card" [routerLink]="['/shop']" [queryParams]="{ category: category.slug }">
+          <img [src]="category.image" [alt]="category.name" />
+          <div>
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.blurb }}</p>
+            <span>{{ category.count }} {{ category.count === 1 ? 'item' : 'items' }}</span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Market favorites</p>
+        <h2>On the table this week.</h2>
+      </div>
+    </div>
+    @if (loading()) {
+      <p class="muted">Bringing in the harvest…</p>
+    } @else {
+      <div class="product-grid">
+        @for (product of featured(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<section class="section">
+  <div class="container press">
+    <div class="press-copy">
+      <p class="eyebrow">Cold-pressed</p>
+      <h2>Pressed before the city wakes up.</h2>
+      <p>
+        Oranges, lemons, and berries go into the press the morning they leave the grove. No concentrate, no color, just fruit and a clean bottle.
+      </p>
+      <a class="btn btn-dark" routerLink="/shop" [queryParams]="{ category: 'pressed' }">Shop the press</a>
+    </div>
+    <div class="press-photos">
+      @for (product of seasonal(); track product.id) {
+        <a class="press-card" [routerLink]="['/product', product.slug]">
+          <img [src]="product.image" [alt]="product.name" />
+          <span>{{ product.name }}</span>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container values">
+    <article>
+      <h3>Picked ripe</h3>
+      <p>We wait for sugar, not the calendar. If a crate is not ready, it stays in the orchard.</p>
+    </article>
+    <article>
+      <h3>Packed light</h3>
+      <p>Paper, glass, and a single ice sheet. The fruit should be the loudest thing in the box.</p>
+    </article>
+    <article>
+      <h3>Delivered cold</h3>
+      <p>Berries and juice travel chilled. Citrus rides at room temperature so the oils stay bright.</p>
+    </article>
+  </div>
+</section>

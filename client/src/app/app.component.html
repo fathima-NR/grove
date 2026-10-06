@@ -1,0 +1,11 @@
+<div class="site">
+  <a class="skip" href="#main">Skip to the market</a>
+  <app-header />
+  <main id="main">
+    <router-outlet />
+  </main>
+  <app-footer />
+  @if (cart.notice()) {
+    <div class="toast" role="status">{{ cart.notice() }}</div>
+  }
+</div>

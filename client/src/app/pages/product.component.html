@@ -1,0 +1,54 @@
+<section class="page">
+  <div class="container">
+    <p class="crumbs"><a routerLink="/shop">Market</a> / {{ product()?.name ?? 'Produce' }}</p>
+
+    @if (loading()) {
+      <p class="muted">Finding that crate…</p>
+    } @else if (error() || !product()) {
+      <div class="empty">
+        <h1>Sold through.</h1>
+        <p>{{ error() }}</p>
+        <a class="btn btn-dark" routerLink="/shop">Back to the market</a>
+      </div>
+    } @else {
+      <div class="detail">
+        <div class="detail-media">
+          @if (product()!.badge) {
+            <span class="badge">{{ product()!.badge }}</span>
+          }
+          <img [src]="product()!.image" [alt]="product()!.name" />
+        </div>
+        <div class="detail-copy">
+          <p class="eyebrow">{{ product()!.origin }}</p>
+          <h1>{{ product()!.name }}</h1>
+          <p class="rating">{{ product()!.rating }} · {{ product()!.reviewCount }} notes from regulars</p>
+          <p class="price detail-price">{{ money(product()!.price) }} <span>/ {{ product()!.unit }}</span></p>
+          <p class="lede">{{ product()!.description }}</p>
+          <p>{{ product()!.details }}</p>
+          <p class="stock">{{ product()!.stock > 0 ? product()!.stock + ' available today' : 'Sold out' }}</p>
+          <div class="buy-row">
+            <div class="stepper">
+              <button type="button" (click)="changeQty(-1)" aria-label="Decrease quantity">−</button>
+              <span>{{ quantity() }}</span>
+              <button type="button" (click)="changeQty(1)" aria-label="Increase quantity">+</button>
+            </div>
+            <button type="button" class="btn btn-dark" (click)="add()" [disabled]="product()!.stock < 1">
+              Add to basket
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (related().length) {
+        <div class="section-head related-head">
+          <h2>From the same row</h2>
+        </div>
+        <div class="product-grid">
+          @for (item of related(); track item.id) {
+            <app-product-card [product]="item" />
+          }
+        </div>
+      }
+    }
+  </div>
+</section>

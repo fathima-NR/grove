@@ -1,0 +1,47 @@
+<section class="page">
+  <div class="container">
+    <p class="eyebrow">Orders</p>
+    <h1>Crates with your name on them.</h1>
+
+    @if (placed()) {
+      <p class="banner good">Order received. We are packing it now.</p>
+    }
+    @if (error()) {
+      <p class="banner">{{ error() }}</p>
+    }
+    @if (loading()) {
+      <p class="muted">Looking up your orders…</p>
+    } @else if (orders().length === 0) {
+      <div class="empty">
+        <h2>No orders yet.</h2>
+        <a class="btn btn-dark" routerLink="/shop">Shop the market</a>
+      </div>
+    } @else {
+      <div class="order-list">
+        @for (order of orders(); track order.id) {
+          <article class="order-card" [class.fresh]="placed() === order.id">
+            <header>
+              <div>
+                <p class="eyebrow">{{ statusLabel(order.status) }}</p>
+                <h2>{{ money(order.total) }}</h2>
+              </div>
+              <time>{{ order.createdAt | date: 'medium' }}</time>
+            </header>
+            <ul>
+              @for (item of order.items; track item.name) {
+                <li>
+                  <img [src]="item.image" [alt]="item.name" />
+                  <span>{{ item.quantity }} × {{ item.name }}</span>
+                  <strong>{{ money(item.price * item.quantity) }}</strong>
+                </li>
+              }
+            </ul>
+            <p class="muted">
+              {{ order.address.fullName }}, {{ order.address.line1 }}, {{ order.address.city }} {{ order.address.postalCode }}
+            </p>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>
