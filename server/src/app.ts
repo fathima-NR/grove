@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth';
@@ -6,13 +8,22 @@ import productRoutes from './routes/products';
 import orderRoutes from './routes/orders';
 import { env } from './config/env';
 
+const clientDir = path.resolve(__dirname, '../../client/dist/client/browser');
+
+function allowedOrigin(origin: string | undefined): boolean {
+  if (!origin) return true;
+  const allowed = new Set([env.clientOrigin, 'http://localhost:4200', 'http://127.0.0.1:4200']);
+  return allowed.has(origin) || origin.endsWith('.onrender.com');
+}
+
 export function createApp() {
   const app = express();
 
-  const origins = Array.from(new Set([env.clientOrigin, 'http://localhost:4200', 'http://127.0.0.1:4200']));
   app.use(
     cors({
-      origin: origins,
+      origin(origin, callback) {
+        callback(null, allowedOrigin(origin));
+      },
       credentials: true,
     }),
   );
@@ -26,6 +37,17 @@ export function createApp() {
   app.use('/api/categories', categoryRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/orders', orderRoutes);
+
+  if (fs.existsSync(clientDir)) {
+    app.use(express.static(clientDir));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api')) {
+        next();
+        return;
+      }
+      res.sendFile(path.join(clientDir, 'index.html'));
+    });
+  }
 
   app.use((_req, res) => {
     res.status(404).json({ message: 'Not found.' });

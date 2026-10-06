@@ -1,0 +1,33 @@
+services:
+  - type: pserv
+    name: grove-mongo
+    runtime: docker
+    region: singapore
+    plan: starter
+    dockerfilePath: ./mongo/Dockerfile
+    dockerContext: ./mongo
+    disk:
+      name: grove-mongo-data
+      mountPath: /data/db
+      sizeGB: 10
+
+  - type: web
+    name: grove-market
+    runtime: node
+    region: singapore
+    plan: free
+    buildCommand: npm install --prefix client && npm run build --prefix client && npm install --prefix server
+    startCommand: npm start --prefix server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGO_HOST
+        fromService:
+          type: pserv
+          name: grove-mongo
+          property: host
