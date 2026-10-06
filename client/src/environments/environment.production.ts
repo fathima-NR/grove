@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: '/api',
+  apiUrl: 'https://grove-api-d73t.onrender.com/api',
 };
