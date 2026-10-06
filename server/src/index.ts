@@ -4,8 +4,8 @@ import { connectDb, disconnectDb } from './config/db';
 import { seedIfEmpty } from './seed/seed';
 
 async function main() {
-  await connectDb();
-  await seedIfEmpty();
+  const connected = await connectDb();
+  if (connected) await seedIfEmpty();
 
   const app = createApp();
   const server = app.listen(env.port, () => {

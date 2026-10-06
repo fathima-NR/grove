@@ -3,10 +3,19 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { User } from '../models/User';
+import { dbReady } from '../config/db';
 import { env } from '../config/env';
 import { requireAuth } from '../middleware/auth';
 
 const router = Router();
+
+router.use((_req, res, next) => {
+  if (!dbReady()) {
+    res.status(503).json({ message: 'Sign-in opens once MongoDB is connected.' });
+    return;
+  }
+  next();
+});
 
 const credentialsSchema = z.object({
   name: z.string().trim().min(2).max(80).optional(),

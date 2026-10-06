@@ -13,7 +13,7 @@ const clientDir = path.resolve(__dirname, '../../client/dist/client/browser');
 function allowedOrigin(origin: string | undefined): boolean {
   if (!origin) return true;
   const allowed = new Set([env.clientOrigin, 'http://localhost:4200', 'http://127.0.0.1:4200']);
-  return allowed.has(origin) || origin.endsWith('.onrender.com');
+  return allowed.has(origin) || origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app');
 }
 
 export function createApp() {

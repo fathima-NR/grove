@@ -3,10 +3,19 @@ import { Types } from 'mongoose';
 import { z } from 'zod';
 import { Product } from '../models/Product';
 import { Order } from '../models/Order';
+import { dbReady } from '../config/db';
 import { requireAuth } from '../middleware/auth';
 import { roundMoney, shippingFor } from '../lib/money';
 
 const router = Router();
+
+router.use((_req, res, next) => {
+  if (!dbReady()) {
+    res.status(503).json({ message: 'Orders are saved once MongoDB is connected.' });
+    return;
+  }
+  next();
+});
 
 const orderSchema = z.object({
   items: z

@@ -1,33 +1,20 @@
 services:
-  - type: pserv
-    name: grove-mongo
-    runtime: docker
-    region: singapore
-    plan: starter
-    dockerfilePath: ./mongo/Dockerfile
-    dockerContext: ./mongo
-    disk:
-      name: grove-mongo-data
-      mountPath: /data/db
-      sizeGB: 10
-
   - type: web
-    name: grove-market
+    name: grove-api
     runtime: node
-    region: singapore
     plan: free
-    buildCommand: npm install --prefix client && npm run build --prefix client && npm install --prefix server
+    region: singapore
+    branch: main
+    buildCommand: npm install --include=dev --prefix client && npm run build --prefix client && npm install --omit=dev --prefix server
     startCommand: npm start --prefix server
     healthCheckPath: /api/health
+    autoDeployTrigger: commit
     envVars:
       - key: NODE_VERSION
         value: "22"
-      - key: NODE_ENV
-        value: production
+      - key: CLIENT_ORIGIN
+        value: https://grove-green.vercel.app
       - key: JWT_SECRET
         generateValue: true
-      - key: MONGO_HOST
-        fromService:
-          type: pserv
-          name: grove-mongo
-          property: host
+      - key: MONGODB_URI
+        sync: false
